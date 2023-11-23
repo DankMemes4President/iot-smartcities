@@ -1,0 +1,20 @@
+{
+    "@id": "dtmi:com:adt:dtsample:traffic_lights;1",
+    "@type": "Interface",
+    "@context": "dtmi:dtdl:context;2",
+    "displayName": "Traffic Light",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "id",
+        "schema": "string"     
+      },    
+      {
+        "@type": "Relationship",
+        "@id": "dtmi:com:adt:dtsample:road:lanes;4",
+        "name": "lanes",
+        "displayName": "Traffic Light has Lanes",
+        "target": "dtmi:com:adt:dtsample:road;1"
+      }
+    ]
+  }
