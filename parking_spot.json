@@ -10,7 +10,7 @@
         "schema": "string"
       },
       {
-        "@type": "Telemetry",
+        "@type": "Property",
         "name": "status",
         "schema": {
           "@type": "Enum",
@@ -35,7 +35,7 @@
         }
       },
       {
-        "@type": "Telemetry",
+        "@type": "Property",
         "name": "Type",
         "schema": {
           "@type": "Enum",

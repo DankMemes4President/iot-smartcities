@@ -10,7 +10,7 @@
       "schema": "string"
     },
     {
-      "@type": "Telemetry",
+      "@type": "Property",
       "name": "isEv",
       "schema": {
         "@type": "Enum",

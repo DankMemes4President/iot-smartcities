@@ -21,6 +21,11 @@ random_number = random.randint(1, 20)
 number_of_cars = []
 print("Random Number:", random_number)
 spotStatus = ['Reserved', 'Occupied', 'Vacant']
+carType = ['EV', 'ICE']
+vacant = []
+reserved = []
+occupied = []
+incompatible = []
 for key, twin in enumerate(query_result):
     relationships = service_client.list_relationships(twin["$dtId"])
     print(twin["$dtId"])
@@ -30,50 +35,73 @@ for key, twin in enumerate(query_result):
         print("Vehicle" in twin["$dtId"])
     if "Vehicle" in twin["$dtId"]:
         lol = service_client.delete_digital_twin(twin["$dtId"])
-for i in range(1,2):
-    digital_twin_id = f'ParkingSpot{i}'
-    temporary_twin = {
-        "$metadata": {
-            "$model": "dtmi:com:adt:dtsample:vehicle;1"
-        },
-        "id": digital_twin_id,
-        "name": f"Spot {i}",
-        "status": random.choice(list(spotStatus))
+digital_twin_id = 'ParkingCar'
+patch = [{
+        "op": "replace",
+        "path": "/isEv",
+        "value": random.choice(list(carType))
     }
+    ]
 
-    created_twin = service_client.upsert_digital_twin(digital_twin_id, temporary_twin)
-    print(f'Created Digital Twin {i}:')
-    print(created_twin)
-    roads = ['RoadA', 'RoadB', 'RoadC']
-    random_road = random.choice(roads)
-    print("Random Road:", random_road)
-    myRelationship = {
-        "$relationshipId": f"RoadVehicle {i}",
-        "$sourceId": random_road ,
-        "$relationshipName": "is_on",
-        "$targetId":  f"Vehicle{i}"
-        }
-    print(myRelationship)
-    service_client.upsert_relationship(
-        myRelationship["$sourceId"],
-        myRelationship["$relationshipId"],
-        myRelationship
-    )  
+updated_twin = service_client.update_digital_twin(digital_twin_id, patch)
+print('Updated Digital Twin')
+for i in range(1,11):
+    digital_twin_id = f'ParkingSpot{i}'
+    patch = [{
+        "op": "replace",
+        "path": "/status",
+        "value": random.choice(list(spotStatus)),
+    }
+    ]
 
-for road in roads:
-    relationships = service_client.list_relationships(road)
-    relationships_list = list(relationships)
-    print("Number of Relationships:", len(relationships_list))
-    number_of_cars.append(len(relationships_list))
+    updated_twin = service_client.update_digital_twin(digital_twin_id, patch)
+    print(f'Updated Digital Twin {i}:')
+get_twin = service_client.get_digital_twin('ParkingCar')
+print(get_twin)
+for key, twin in enumerate(query_result):  
+    if "ParkingSpot" in twin["$dtId"]:
+        if(get_twin["isEv"] == twin["Type"]):
+            if(twin["status"] == "Vacant"):
+                vacant.append(twin)
+            elif(twin["status"] == "Occupied"):
+                occupied.append(twin)
+            elif(twin["status"] == "Reserved"):
+                reserved.append(twin)
+        else: 
+            incompatible.append(twin)
+            
+print(vacant)
+print(incompatible)
+#     roads = ['RoadA', 'RoadB', 'RoadC']
+#     random_road = random.choice(roads)
+#     print("Random Road:", random_road)
+#     myRelationship = {
+#         "$relationshipId": f"RoadVehicle {i}",
+#         "$sourceId": random_road ,
+#         "$relationshipName": "is_on",
+#         "$targetId":  f"Vehicle{i}"
+#         }
+#     print(myRelationship)
+#     service_client.upsert_relationship(
+#         myRelationship["$sourceId"],
+#         myRelationship["$relationshipId"],
+#         myRelationship
+#     )  
 
-max_value = max(number_of_cars)
-max_indices = [i for i, value in enumerate(number_of_cars) if value == max_value]
-if len(max_indices) > 1:
-    selected_road = random.choice(max_indices)
-    print(f"Traffic light for road {chr(ord('A') + selected_road)} has turned green")
-else:
-    max_index = number_of_cars.index(max_value)
-    print(f"Traffic light for road {chr(ord('A') + max_index)} has turned green")   
+# for road in roads:
+#     relationships = service_client.list_relationships(road)
+#     relationships_list = list(relationships)
+#     print("Number of Relationships:", len(relationships_list))
+#     number_of_cars.append(len(relationships_list))
+
+# max_value = max(number_of_cars)
+# max_indices = [i for i, value in enumerate(number_of_cars) if value == max_value]
+# if len(max_indices) > 1:
+#     selected_road = random.choice(max_indices)
+#     print(f"Traffic light for road {chr(ord('A') + selected_road)} has turned green")
+# else:
+#     max_index = number_of_cars.index(max_value)
+#     print(f"Traffic light for road {chr(ord('A') + max_index)} has turned green")   
     # for
     # if key <= 6:
         # relationships = service_client.list_relationships(twin['$dtId'])
