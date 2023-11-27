@@ -1,0 +1,44 @@
+{
+    "@id": "dtmi:com:adt:dtsample:parking_spot;1",
+    "@type": "Interface",
+    "@context": "dtmi:dtdl:context;2",
+    "displayName": "Parking Spot",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "id",
+        "schema": "string"
+      },
+      {
+        "@type": "Telemetry",
+        "name": "status",
+        "schema": {
+          "@type": "Enum",
+          "valueSchema": "string",
+          "enumValues": [
+            {
+              "name": "Reserved",
+              "displayName": "Reserved",
+              "enumValue": "Reserved"
+            },
+            {
+              "name": "Occupied",
+              "displayName": "Occupied",
+              "enumValue": "Occupied"
+            },
+            {
+                "name": "Vacant",
+                "displayName": "Vacant",
+                "enumValue": "Vacant"
+              }
+          ]
+        }
+      },
+      {
+        "@type": "Property",
+        "name": "name",
+        "schema": "string"
+      }
+    ]
+  }
+  

@@ -1,5 +1,6 @@
 from azure.digitaltwins.core import DigitalTwinsClient
 from azure.identity import DefaultAzureCredential
+import random
 # DefaultAzureCredential supports different authentication mechanisms and determines the appropriate credential type based of the environment it is executing in.
 # It attempts to use multiple credential types in an order until it finds a working credential.
 
@@ -16,8 +17,63 @@ service_client = DigitalTwinsClient(url, credential)
 query_expression = 'SELECT * FROM digitaltwins'
 query_result = service_client.query_twins(query_expression)
 print('DigitalTwins:')
+random_number = random.randint(1, 20)
+number_of_cars = []
+print("Random Number:", random_number)
+
 for key, twin in enumerate(query_result):
-    print(key, twin)
+    relationships = service_client.list_relationships(twin["$dtId"])
+    print(twin["$dtId"])
+    for relationship in relationships:
+        print(relationship)
+        service_client.delete_relationship(twin["$dtId"],relationship["$relationshipId"])
+        print("Vehicle" in twin["$dtId"])
+    if "Vehicle" in twin["$dtId"]:
+        lol = service_client.delete_digital_twin(twin["$dtId"])
+for i in range(1, random_number+1):
+    digital_twin_id = f'Vehicle{i}'
+    temporary_twin = {
+        "$metadata": {
+            "$model": "dtmi:com:adt:dtsample:vehicle;1"
+        },
+        "id": digital_twin_id,
+        "name": f"Vehicle {i}"
+    }
+
+    created_twin = service_client.upsert_digital_twin(digital_twin_id, temporary_twin)
+    print(f'Created Digital Twin {i}:')
+    print(created_twin)
+    roads = ['RoadA', 'RoadB', 'RoadC']
+    random_road = random.choice(roads)
+    print("Random Road:", random_road)
+    myRelationship = {
+        "$relationshipId": f"RoadVehicle {i}",
+        "$sourceId": random_road ,
+        "$relationshipName": "is_on",
+        "$targetId":  f"Vehicle{i}"
+        }
+    print(myRelationship)
+    service_client.upsert_relationship(
+        myRelationship["$sourceId"],
+        myRelationship["$relationshipId"],
+        myRelationship
+    )  
+
+for road in roads:
+    relationships = service_client.list_relationships(road)
+    relationships_list = list(relationships)
+    print("Number of Relationships:", len(relationships_list))
+    number_of_cars.append(len(relationships_list))
+
+max_value = max(number_of_cars)
+max_indices = [i for i, value in enumerate(number_of_cars) if value == max_value]
+if len(max_indices) > 1:
+    selected_road = random.choice(max_indices)
+    print(f"Traffic light for road {chr(ord('A') + selected_road)} has turned green")
+else:
+    max_index = number_of_cars.index(max_value)
+    print(f"Traffic light for road {chr(ord('A') + max_index)} has turned green")   
+    # for
     # if key <= 6:
         # relationships = service_client.list_relationships(twin['$dtId'])
         # for relationship in relationships:

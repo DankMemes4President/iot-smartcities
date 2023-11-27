@@ -1,18 +1,38 @@
 {
-    "@id": "dtmi:com:adt:dtsample:vehicle;1",
-    "@type": "Interface",
-    "@context": "dtmi:dtdl:context;2",
-    "displayName": "Vehicle",
-    "contents": [
-      {
-        "@type": "Property",
-        "name": "id",
-        "schema": "string"     
-      },
-      { 
-        "@type": "Property",
-        "name": "name",
-        "schema": "string"     
+  "@id": "dtmi:com:adt:dtsample:vehicle;1",
+  "@type": "Interface",
+  "@context": "dtmi:dtdl:context;2",
+  "displayName": "Vehicle",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "id",
+      "schema": "string"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "isEv",
+      "schema": {
+        "@type": "Enum",
+        "valueSchema": "string",
+        "enumValues": [
+          {
+            "name": "EV",
+            "displayName": "EV",
+            "enumValue": "EV"
+          },
+          {
+            "name": "ICE",
+            "displayName": "ICE",
+            "enumValue": "ICE"
+          }
+        ]
       }
-    ]
+    },
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string"
+    }
+  ]
 }
