@@ -35,6 +35,26 @@
         }
       },
       {
+        "@type": "Telemetry",
+        "name": "Type",
+        "schema": {
+          "@type": "Enum",
+          "valueSchema": "string",
+          "enumValues": [
+            {
+              "name": "EV",
+              "displayName": "EV",
+              "enumValue": "EV"
+            },
+            {
+              "name": "ICE",
+              "displayName": "ICE",
+              "enumValue": "ICE"
+            }
+          ]
+        }
+      },
+      {
         "@type": "Property",
         "name": "name",
         "schema": "string"
