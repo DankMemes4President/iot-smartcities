@@ -26,18 +26,9 @@ vacant = []
 reserved = []
 occupied = []
 incompatible = []
-for key, twin in enumerate(query_result):
-    relationships = service_client.list_relationships(twin["$dtId"])
-    print(twin["$dtId"])
-    for relationship in relationships:
-        print(relationship)
-        service_client.delete_relationship(twin["$dtId"],relationship["$relationshipId"])
-        print("Vehicle" in twin["$dtId"])
-    if "Vehicle" in twin["$dtId"]:
-        lol = service_client.delete_digital_twin(twin["$dtId"])
 digital_twin_id = 'ParkingCar'
 patch = [{
-        "op": "replace",
+        "op": "replace",    
         "path": "/isEv",
         "value": random.choice(list(carType))
     }
@@ -58,7 +49,8 @@ for i in range(1,11):
     print(f'Updated Digital Twin {i}:')
 get_twin = service_client.get_digital_twin('ParkingCar')
 print(get_twin)
-for key, twin in enumerate(query_result):  
+for key, twin in enumerate(query_result):
+    print("hi")  
     if "ParkingSpot" in twin["$dtId"]:
         if(get_twin["isEv"] == twin["Type"]):
             if(twin["status"] == "Vacant"):
